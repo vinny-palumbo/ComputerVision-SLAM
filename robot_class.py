@@ -69,7 +69,7 @@ class robot:
     ## make sure the indentation of the code is correct
     def sense(self):
         ''' This function does not take in any parameters, instead it references internal variables
-            (such as self.landamrks) to measure the distance between the robot and any landmarks
+            (such as self.landmarks) to measure the distance between the robot and any landmarks
             that the robot can see (that are within its measurement range).
             This function returns a list of landmark indices, and the measured distances (dx, dy)
             between the robot's position and said landmarks.
@@ -80,16 +80,27 @@ class robot:
         measurements = []
         
         ## TODO: iterate through all of the landmarks in a world
+        for i, landmark in enumerate(self.landmarks):
         
-        ## TODO: For each landmark
-        ## 1. compute dx and dy, the distances between the robot and the landmark
-        ## 2. account for measurement noise by *adding* a noise component to dx and dy
-        ##    - The noise component should be a random value between [-1.0, 1.0)*measurement_noise
-        ##    - Feel free to use the function self.rand() to help calculate this noise component
-        ## 3. If either of the distances, dx or dy, fall outside of the internal var, measurement_range
-        ##    then we cannot record them; if they do fall in the range, then add them to the measurements list
-        ##    as list.append([index, dx, dy]), this format is important for data creation done later
-        
+            ## TODO: For each landmark
+            ## 1. compute dx and dy, the distances between the robot and the landmark
+            x_landmark = landmark[0]
+            y_landmark = landmark[1]
+            dx = x_landmark - self.x
+            dy = y_landmark - self.y
+            
+            ## 2. account for measurement noise by *adding* a noise component to dx and dy
+            ##    - The noise component should be a random value between [-1.0, 1.0)*measurement_noise
+            ##    - Feel free to use the function self.rand() to help calculate this noise component
+            dx += self.rand() * self.measurement_noise
+            dy += self.rand() * self.measurement_noise
+            
+            ## 3. If either of the distances, dx or dy, fall outside of the internal var, measurement_range
+            ##    then we cannot record them; if they do fall in the range, then add them to the measurements list
+            ##    as list.append([index, dx, dy]), this format is important for data creation done later
+            if abs(dx) <= self.measurement_range and abs(dy) <= self.measurement_range:
+                measurements.append([i, dx, dy])
+            
         ## TODO: return the final, complete list of measurements
         return measurements
 
